@@ -20,29 +20,33 @@ import javafx.scene.web.HTMLEditor;
 public final class Controller {
 
     private Highlighter highlighter = new Highlighter();
+    @FXML private Text version;
+    @FXML private Text count;
     @FXML private CheckBox checkContractions;
     @FXML private CheckBox checkQuotes;
     @FXML private CheckBox replaceContr;
     @FXML private CheckBox checkFirsts;
     @FXML private CheckBox checkSeconds;
-    @FXML private Button button;
-    @FXML private Text text;
+    @FXML private Button check;
+    @FXML private Button unhighlight;
     @FXML private HTMLEditor editor;
 
-    @FXML protected void buttonAction(ActionEvent event) {
+    @FXML
+    public void check(ActionEvent ae) {
         editor.setHtmlText(highlighter.check(editor.getHtmlText(), checkContractions.isSelected(),
-                                             checkQuotes.isSelected(), replaceContr.isSelected(),
-                                             checkFirsts.isSelected(), checkSeconds.isSelected()));
-        text.setText(highlighter.getCount() + " item(s) found.");
+                checkQuotes.isSelected(), replaceContr.isSelected(),
+                checkFirsts.isSelected(), checkSeconds.isSelected()));
+        count.setText(highlighter.getCount() + " item(s) found.");
         if(highlighter.getCount() == 0) {
-            text.setFill(Color.GREEN);
+            count.setFill(Color.GREEN);
         }
         else {
-            text.setFill(Color.RED);
+            count.setFill(Color.RED);
         }
     }
 
-    @FXML protected void unHighlight(ActionEvent event) {
+    @FXML
+    public void unhighlight(ActionEvent ae) {
         editor.setHtmlText(highlighter.unHighlight(editor.getHtmlText()));
     }
 }

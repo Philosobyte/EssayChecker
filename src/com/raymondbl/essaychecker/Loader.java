@@ -17,13 +17,13 @@ import javafx.stage.Stage;
 
 public class Loader extends Application {
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("GUI.fxml"));
 
         Scene scene = new Scene(root);
-        stage.setTitle("Academic Style Checker (Contractions & Pronouns");
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setTitle("Formal Writing Checker");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
     public static void main(String[] args) {
         launch(args);

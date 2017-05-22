@@ -16,7 +16,18 @@ public class Highlighter
     private static final HashMap<String, String> CONTRACTIONS = new HashMap<>();
     /*Uses three unicode variants of apostrophes */
 
-    public void initContractions() {
+    private static final String[] FIRST = {"I", "me", "my", "mine", "myself", "we", "us", "our",
+            "ours", "ourselves", "Me", "My", "Mine", "Myself", "We", "Us", "Our",
+            "Ours", "Ourselves"};
+    private static final String[] SECOND = {"you", "your", "yours", "yourself", "yourselves",
+            "You", "Your", "Yours", "Yourself", "Yourselves"};
+    private static final Pattern QUOTES_PATTERN = Pattern.compile("[\"“”]");
+
+    public Highlighter() {
+        initContractions();
+    }
+
+    private void initContractions() {
         CONTRACTIONS.put("aren['‘’]t", "are not");
         CONTRACTIONS.put("can['‘’]t", "cannot");
         CONTRACTIONS.put("couldn['‘’]t", "could not");
@@ -119,20 +130,15 @@ public class Highlighter
         CONTRACTIONS.put("You['‘’]ve", "You have");
     }
 
-    private static final String[] FIRST = {"I", "me", "my", "mine", "myself", "we", "us", "our",
-            "ours", "ourselves", "Me", "My", "Mine", "Myself", "We", "Us", "Our",
-            "Ours", "Ourselves"};
-    private static final String[] SECOND = {"you", "your", "yours", "yourself", "yourselves",
-            "You", "Your", "Yours", "Yourself", "Yourselves"};
-    private static Pattern QUOTES_PATTERN = Pattern.compile("[\"“”]");
-
-    public Highlighter() {
-        initContractions();
-    }
-
     /**
-     * Highlights items in the HTMLEditor string and returns the new string
-     * @return string with HTML color formatting
+     * Highlights checked items in a string with HTML formatting and returns the new string
+     * @param input             string to be checked and highlighted
+     * @param checkContractions if contractions should be checked.
+     * @param checkQuotes       if items inside quotation marks should be checked.
+     * @param replaceContr      if contractions should be replaced.
+     * @param includeFirsts     if first-person pronouns should be checked.
+     * @param includeSeconds    if second-person pronouns should be checked.
+     * @return                  string with HTML color formatting
      */
     public String check(String input, boolean checkContractions, boolean checkQuotes,
                         boolean replaceContr, boolean includeFirsts, boolean includeSeconds) {
@@ -140,7 +146,6 @@ public class Highlighter
         if(!checkQuotes) {
             split(input);
         } else checkedInput.add(input);
-        System.out.println("After split: " + checkedInput.toString());
         if(includeFirsts) {
             highlight(FIRST);
         }
@@ -150,26 +155,26 @@ public class Highlighter
         if(checkContractions) {
             highlight(CONTRACTIONS, replaceContr);
         }
-        System.out.println("After highlight: " + checkedInput.toString());
         String output = putTogether();
         setCount(output);
-        System.out.println("After puttogether: " + output);
         return output;
     }
 
     /**
      * Erases any HTML formatting that highlights text with a red color.
+     * @param input highlighted string
+     * @return unhighlighted string
      */
     private String removeRed(String input) {
         Matcher redMatcher = Pattern.compile("(<font color=(\\W)red(\\W)>)|(</font>)").matcher(input);
         String output = redMatcher.replaceAll("");
-        System.out.println("removeRed: " + output);
         return output;
     }
 
     /**
-     * Splits the input into two ArrayLists: checkedInput, which will be processed,
-     * and uncheckedInput, which are ignored until the two are assembled together.
+     * Splits the input into two ArrayLists: checkedInput, which will go through highlighting,
+     * and uncheckedInput, which is ignored until the two lists are assembled together.
+     * @param input string with HTML formatting
      */
     private void split(String input) {
         checkedInput = new ArrayList<>();
@@ -183,34 +188,45 @@ public class Highlighter
     }
 
     /**
-     * Items defined in the parameter are matched against checkedInput.
+     * Highlights items in <code>checkedInput</code> which match items in the given array.
      * @param array for contractions or pronouns
      */
     private void highlight(String[] array) {
         for(int i = 0; i < array.length; i++) {
             for(int k = 0; k < checkedInput.size(); k++) {
-                replace(array[i], k, false);
+                replace(array[i], k, null);
             }
         }
     }
 
+    /**
+     * Highlights items in <code>checkedInput</code> which match items in the given map. If replaceContr
+     * is true, the items will also be replaced with their corresponding values from the map.
+     * @param map           map in which keys are items to be matched, and values are the items'
+     *                      replacements.
+     * @param replaceContr  true if items should be replaced. False otherwise.
+     */
     private void highlight(Map<String, String> map, boolean replaceContr) {
         map.forEach((String key, String value) -> {
             for(int k = 0; k < checkedInput.size(); k++) {
-                replace(key, k, replaceContr);
+                replace(key, k, (replaceContr) ? map.get(key) : null);
             }
         });
     }
+
     /**
-     * @param bool determines whether or not to replace the contraction
-     * with its extended version.
+     * Replaces a string at a given index in <code>checkedInput</code>.
+     * @param toMatch       String to be replaced
+     * @param index         index of the string in <code>checkedContractions</code>
+     * @param replacement   replacement of the String. <code>null</code> if the string
+     *                      is being replaced with itself and its original formatting
+     *                      should be preserved.
      */
-    private void replace(String toMatch, int index, boolean bool) {
+    private void replace(String toMatch, int index, String replacement) {
         Pattern inputPattern = Pattern.compile("([^\\w\'’]|\\s)" + "(" + toMatch + ")" + "([^\\w\'’]|\\s)");
         String tempInput = checkedInput.get(index);
         Matcher inputMatcher = inputPattern.matcher(tempInput);
-        if(bool) {
-            String replacement = CONTRACTIONS.get(toMatch);
+        if(replacement != null) {
             checkedInput.set(index, inputMatcher.replaceAll("$1<font color=\"red\">" + replacement + "</font>$3"));
         } else checkedInput.set(index, inputMatcher.replaceAll("$1<font color=\"red\">$2</font>$3"));
     }
@@ -236,7 +252,7 @@ public class Highlighter
     }
 
     /**
-     * Makes the count, once the output is put together and ready to be printed.
+     * Counts the number of items found.
      */
     private int setCount(String string) {
         count = 0;
@@ -246,6 +262,10 @@ public class Highlighter
         return count;
     }
 
+    /**
+     * Returns the number of items found.
+     * @return the number of items found.
+     */
     public int getCount() {
         return count;
     }

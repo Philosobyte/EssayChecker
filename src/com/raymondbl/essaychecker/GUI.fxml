@@ -1,94 +1,143 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.web.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.text.*?>
 <?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.raymondbl.essaychecker.Controller">
-    <children>
-        <HTMLEditor fx:id="editor" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot; &gt;&lt;p&gt;&lt;font face=&quot;Times New Roman&quot;&gt; Paste your essay here. &lt;/font&gt; &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="24.0" layoutY="66.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="1240.0" stylesheets="@../style.css" />
-        <Separator layoutX="24.0" layoutY="58.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="8.0" prefWidth="1240.0" />
-        <HBox layoutX="24.0" layoutY="24.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="1250.0">
-            <children>
-                <CheckBox fx:id="checkContractions" mnemonicParsing="false" text="Check for contractions">
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                    <padding>
-                        <Insets left="10.0" right="20.0" />
-                    </padding>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </CheckBox>
-                <CheckBox fx:id="checkQuotes" mnemonicParsing="false" text="Include text in quotes">
-                    <padding>
-                        <Insets left="10.0" right="20.0" />
-                    </padding>
-                    <HBox.margin>
-                        <Insets />
-                    </HBox.margin>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </CheckBox>
-                <CheckBox fx:id="replaceContr" mnemonicParsing="false" text="Replace contractions">
-                    <padding>
-                        <Insets left="10.0" right="15.0" />
-                    </padding>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </CheckBox>
-                <CheckBox fx:id="checkFirsts" mnemonicParsing="false" text="Check for 1st Person Pronouns">
-                    <padding>
-                        <Insets left="10.0" right="15.0" />
-                    </padding>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </CheckBox>
-                <CheckBox fx:id="checkSeconds" mnemonicParsing="false" text="Check for 2nd Person Pronouns">
-                    <padding>
-                        <Insets left="10.0" right="20.0" />
-                    </padding>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </CheckBox>
-                <Button fx:id="button" mnemonicParsing="false" onAction="#buttonAction" text="Check">
-                    <padding>
-                        <Insets left="10.0" right="20.0" />
-                    </padding>
-                    <HBox.margin>
-                        <Insets top="10.0" />
-                    </HBox.margin>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
-                <Button mnemonicParsing="false" onAction="#unHighlight" text="Un-highlight">
-                    <HBox.margin>
-                        <Insets left="20.0" top="10.0" />
-                    </HBox.margin>
-                    <padding>
-                        <Insets left="10.0" right="10.0" />
-                    </padding>
-                    <font>
-                        <Font size="14.0" />
-                    </font>
-                </Button>
-            </children>
-        </HBox>
-        <Text layoutX="24.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="V1.08" />
-        <Text fx:id="text" layoutX="1072.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="114.0">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </Text>
-    </children>
-</Pane>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.raymondbl.essaychecker.Controller"
+          maxHeight="Infinity"
+          maxWidth="Infinity"
+          prefHeight="700.0"
+          prefWidth="1280.0">
+
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+
+    <Text fx:id="version"
+          text="V1.1.0"
+          GridPane.columnIndex="0"
+          GridPane.rowIndex="0" />
+
+    <Text fx:id="count"
+          text=""
+
+          GridPane.columnIndex="6"
+          GridPane.rowIndex="0"
+          GridPane.hgrow="always">
+        <GridPane.margin>
+            <Insets right="10" bottom="5" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </Text>
+
+    <CheckBox fx:id="checkContractions"
+              text="Check for contractions"
+              GridPane.columnIndex="0"
+              GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </CheckBox>
+
+    <CheckBox fx:id="checkQuotes"
+              text="Include text in quotes"
+              GridPane.columnIndex="1"
+              GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </CheckBox>
+
+    <CheckBox fx:id="replaceContr"
+              text="Replace contractions"
+              GridPane.columnIndex="2"
+              GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </CheckBox>
+
+
+    <CheckBox fx:id="checkFirsts"
+              text="Check for 1st Person Pronouns"
+              GridPane.columnIndex="3"
+              GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </CheckBox>
+
+    <CheckBox fx:id="checkSeconds"
+              text="Check for 2nd Person Pronouns"
+              GridPane.columnIndex="4"
+              GridPane.rowIndex="1">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </CheckBox>
+
+    <Button fx:id="check"
+            text="Check"
+            GridPane.columnIndex="5"
+            GridPane.rowIndex="1"
+            onAction="#check">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </Button>
+
+    <Button fx:id="unhighlight"
+            text="Un-highlight"
+            GridPane.columnIndex="6"
+            GridPane.hgrow="always"
+            GridPane.rowIndex="1"
+            onAction="#unhighlight">
+        <GridPane.margin>
+            <Insets right="10" bottom="10" />
+        </GridPane.margin>
+        <font>
+            <Font size="14.0" />
+        </font>
+    </Button>
+
+    <HTMLEditor fx:id="editor"
+                htmlText="&lt;p font face=&quot;Times New Roman&quot;&gt;Paste your essay here. &lt;/p&gt;"
+                GridPane.columnIndex="0"
+                GridPane.rowIndex="2"
+                GridPane.columnSpan="7"
+                GridPane.rowSpan="1"
+                maxHeight="Infinity"
+                maxWidth="Infinity"
+                GridPane.hgrow="always"
+                GridPane.vgrow="always" />
+
+</GridPane>
